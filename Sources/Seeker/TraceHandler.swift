@@ -1,0 +1,40 @@
+//
+//  TraceHandler.swift
+//  Seeker
+//
+//  Created by Svilen Kirov on 7.06.22.
+//
+
+import NIO
+import OpenTelemetry
+import Tracing
+import OtlpGRPCSpanExporting
+
+class TraceHandler {
+    
+    var group: EventLoopGroup
+    var otel: OTel
+    
+    init(serviceName: String, hostname: String, port: UInt) {
+        group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
+        
+        let exporter = OtlpGRPCSpanExporter(
+            config: OtlpGRPCSpanExporter.Config(eventLoopGroup: group,
+                                                host: hostname,
+                                                port: port)
+        )
+        
+        let processor = OTel.SimpleSpanProcessor(exportingTo: exporter)
+        
+        otel = OTel(serviceName: serviceName, eventLoopGroup: group, processor: processor)
+
+        try? otel.start().wait()
+        InstrumentationSystem.bootstrap(otel.tracer())
+    }
+    
+    func shutdown() {
+        try? otel.shutdown().wait()
+        try? group.syncShutdownGracefully()
+    }
+    
+}
