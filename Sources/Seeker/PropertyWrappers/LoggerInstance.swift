@@ -9,9 +9,11 @@ import SwiftUI
 import Logging
 
 @propertyWrapper
-struct LoggerInstance: DynamicProperty {
+public struct LoggerInstance: DynamicProperty {
     
-    var wrappedValue: Logger {
+    public init() {}
+    
+    public var wrappedValue: Logger {
         get {
             LoggerWrapper.logger!
         }

@@ -9,9 +9,11 @@ import SwiftUI
 import Prometheus
 
 @propertyWrapper
-struct MetricsInstance: DynamicProperty {
+public struct MetricsInstance: DynamicProperty {
     
-    var wrappedValue: PrometheusClient {
+    public init() {}
+    
+    public var wrappedValue: PrometheusClient {
         get {
             MetricsWrapper.metrics!
         }

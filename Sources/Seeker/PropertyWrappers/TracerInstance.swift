@@ -9,9 +9,11 @@ import SwiftUI
 import Tracing
 
 @propertyWrapper
-struct TracerInstance: DynamicProperty {
+public struct TracerInstance: DynamicProperty {
     
-    var wrappedValue: Tracer {
+    public init() {}
+    
+    public var wrappedValue: Tracer {
         get {
             TracerWrapper.tracer!
         }
