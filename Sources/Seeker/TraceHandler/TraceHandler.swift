@@ -29,12 +29,15 @@ class TraceHandler {
         otel = OTel(serviceName: serviceName, eventLoopGroup: group, processor: processor)
 
         try? otel.start().wait()
-        InstrumentationSystem.bootstrap(otel.tracer())
+        let tracer = otel.tracer()
+        InstrumentationSystem.bootstrap(tracer)
+        TracerWrapper.tracer = tracer
     }
     
     func shutdown() {
         try? otel.shutdown().wait()
         try? group.syncShutdownGracefully()
+        TracerWrapper.tracer = nil
     }
     
 }

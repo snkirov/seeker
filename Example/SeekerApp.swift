@@ -21,24 +21,6 @@ struct SeekerApp: App {
         
         // Logger Setup
         Seeker.loggerSetup()
-
-        // Register LogHandlers in the LoggingSystem
-        LoggingSystem.bootstrap { label in
-            MultiplexLogHandler(
-                [
-                    LogstashLogHandler(label: label),
-                    StreamLogHandler.standardOutput(label: label)
-                ]
-            )
-        }
-
-        let deviceId = IdentificationService.getRandomizedDeviceId()
-        
-        let logger = Logger(label: deviceId)
-        LoggerFactory.logger = logger
-
-        // 3) we're now ready to use it
-        logger.info("App Started!")
         
         // Tracer Setup
         Seeker.tracerSetup(serviceName: deviceId)
@@ -46,6 +28,7 @@ struct SeekerApp: App {
         // Metrics Setup
         Seeker.metricsSetup(serviceName: deviceId)
         
+        LoggerFactory.logger?.info("App Started!")
     }
     
     var body: some Scene {

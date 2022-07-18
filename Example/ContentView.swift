@@ -15,16 +15,21 @@ struct ContentView: View {
 
     
     var body: some View {
-        NavigationLink("Detail Screen", destination: DetailView())
-            .onAppear {
-                generateLog()
-                generateMetric()
-                generateTrace()
+        NavigationView {
+            VStack(spacing: 15) {
+                Button(action: generateLog) { Text("Generate Log")
+                }
+                Button(action: generateMetric) { Text("Generate Metric")
+                }
+                Button(action: generateTrace) { Text("Generate Trace")
+                }
             }
+        }
+        .navigationTitle("SwiftUI Example")
     }
     
     private func generateLog() {
-        logger.log(level: .info, "We are on the main screen.")
+        logger.log(level: .info, "Just generated log from main screen.")
     }
     
     private func generateMetric() {
@@ -33,25 +38,23 @@ struct ContentView: View {
     }
     
     private func generateTrace() {
-        let rootSpan = tracer.startSpan("hello", baggage: .topLevel)
+        DispatchQueue.global(qos: .background).async {
+            let rootSpan = tracer.startSpan("initial_span", baggage: .topLevel)
 
-        sleep(1)
-        rootSpan.addEvent(SpanEvent(
-            name: "Discovered the meaning of life",
-            attributes: ["meaning_of_life": 42]
-        ))
+            sleep(1)
+            rootSpan.addEvent(SpanEvent(
+                name: "Discovered the meaning of life",
+                attributes: ["meaning_of_life": 42]
+            ))
 
-        let childSpan = tracer.startSpan("world", baggage: rootSpan.baggage)
+            let childSpan = tracer.startSpan("child_span", baggage: rootSpan.baggage)
 
-        sleep(1)
-        childSpan.end()
+            sleep(1)
+            childSpan.end()
 
-        sleep(1)
-        rootSpan.end()
-        
-        sleep(1)
-        
-//        Seeker.tracerTeardown()
+            sleep(1)
+            rootSpan.end()
+        }
     }
 }
 
