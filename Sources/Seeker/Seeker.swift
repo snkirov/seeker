@@ -119,20 +119,12 @@ extension Seeker {
 extension Seeker {
     
     /// Provides the currently used logger instance.
-    /// - Returns: The currently used logger instance.
-    public static func getLogger() -> Logger {
-        LoggerWrapper.logger!
-    }
+    public static var logger: Logger { LoggerWrapper.logger! }
     
     /// Provides the currently used metrics instance.
-    /// - Returns: The currently used metrics instance.
-    public static func getMetrics() -> PrometheusClient {
-        MetricsWrapper.metrics!
-    }
+    public static var metrics: PrometheusClient { MetricsWrapper.metrics! }
     
     /// Provides the currently used tracer instance.
-    /// - Returns: The currently used tracer instance.
-    public static func getTracer() -> Tracer {
-        TracerWrapper.tracer!
-    }
+    public static var tracer: Tracer { TracerWrapper.tracer! }
+    
 }
