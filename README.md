@@ -6,6 +6,10 @@ The Seeker library allows developers to easily collect observability data in the
 
 This library combines [three open-source observability solutions](https://github.com/snkirov/seeker/blob/master/README.md#dependencies) into a single package, thus providing software engineers with a complete picture of how their apps behave in a production environment.
 
+For example projects using this library see [seeker-swift-examples](https://github.com/snkirov/seeker-swift-examples).
+
+For an example backend services setup see [seeker-docker-example](https://github.com/snkirov/seeker-docker-example).
+
 ## Features
 - Written completly in Swift
 - iOS-first, but supports all Apple platforms as well (tvOS, macOS, watchOS)
@@ -16,9 +20,13 @@ This library combines [three open-source observability solutions](https://github
 
 ## Description
 
-### Logging
+The Seeker library facilitates the collection of three types of observability data - logs, metrics and traces.
 
-For the logging we send the data to Logstash. We utilize the `swift-logging-elk` package, which provides a log handler that collects the logs and parses them to Logstash.
+For an example backend services setup see [seeker-docker-example](https://github.com/snkirov/seeker-docker-example).
+
+### Logs
+
+For the logs we send the data to Logstash. We utilize the `swift-logging-elk` package, which provides a log handler that collects the logs and parses them to Logstash.
 
 ### Metrics
 
@@ -57,7 +65,7 @@ targets: [
 ]
 ```
 
-### Setup Logging
+### Logging Setup
 
 Import the `Seeker` module:
 
@@ -83,6 +91,7 @@ If you want to use the logger with an observability framework different than log
 ```swift
 import Seeker
 import Logging
+import Customlogging
 ```
 
 Then just bootstrap the logging system with a log handler of your choice as described [here](https://github.com/apple/swift-log#default-logger-behavior), create a logger and then call the `customLoggerSetup()` function.
@@ -103,7 +112,7 @@ Seeker.customLoggerSetup(for: logger)
 
 **Important:** Using the logger without invoking a logger setup function will result in a crash.
 
-### Setup Metrics
+### Metrics Setup
 
 Import the `Seeker` module:
 
@@ -122,7 +131,7 @@ For a SwiftUI application - do it in the application `init()` method or in the `
 
 **Important:** Using the metrics interface without invoking the metrics setup function will result in a crash.
 
-### Setup Traces
+### Tracer Setup
 
 Import the `Seeker` module:
 
@@ -146,27 +155,138 @@ If you want to use the tracer with an observability framework different than Zip
 ```swift
 import Seeker
 import Tracing
+import CustomTracing
 ```
 
 Then just bootstrap the logging system with a log handler of your choice as described [here](https://github.com/apple/swift-log#default-logger-behavior), create a logger and then call the `customLoggerSetup()` function.
 
 ```swift
-LoggingSystem.bootstrap { label in
-    MultiplexLogHandler(
-        [
-            CustomLogHandler(label: label)
-        ]
-    ) 
-}
+InstrumentationSystem.bootstrap(CustomTracing())
 
-let tracer = Logger("User_1")
+let tracer = InstrumentationSystem.tracer
 
 Seeker.customTracerSetup(for: tracer)
 ```
 
 **Important:** Using the tracer without invoking a tracer setup function will result in a crash.
 
+## Usage
+
+For example projects using this library see [seeker-swift-examples](https://github.com/snkirov/seeker-swift-examples).
+
+### Logs
+
+#### General Usage
+Once setup, the logger interface can be easily accessed by importing the Seeker package and then accessing the `logger` property.
+
+```swift
+import Seeker
+```
+
+```swift
+let logger = Seeker.logger
+// Example logger usage
+logger.log(level: .info, "Some sample log")
+```
+
+#### SwiftUI
+When using SwiftUI the logger interface can be easily accessed by using the `@LoggerInstance` property wrapper.
+
+```swift
+import Seeker
+
+struct SomeView: View {
+
+    @LoggerInstance var logger
+```
+
+For details on how to use the Logging features of `apple/swift-log` exactly, please check out the [documentation of swift-log](https://github.com/apple/swift-log#readme).
+
+### Metrics
+
+#### General Usage
+Once setup, the metrics interface can be easily accessed by importing the Seeker package and then accessing the `metrics` property.
+
+```swift
+import Seeker
+```
+
+```swift
+let metrics = Seeker.metrics
+// Example metrics usage
+let counter = metrics.createCounter(forType: Int.self, named: "example_counter")
+counter.inc()
+```
+
+#### SwiftUI
+When using SwiftUI the metrics interface can be easily accessed by using the `@MetricsInstance` property wrapper.
+
+```swift
+import Seeker
+
+struct SomeView: View {
+
+    @MetricsInstance var metrics
+```
+
+For details on how to use the Metrics features of `swift-server-community/SwiftPrometheus` exactly, please check out the [documentation of SwiftPrometheus](https://github.com/swift-server-community/SwiftPrometheus#counter).
+
+### Traces
+
+#### General Usage
+Once setup, the tracer interface can be easily accessed by importing the Seeker package and then accessing the `tracer` property. To generate a span event, you will need to add a dependency to and import `apple/swift-distributed-tracing`.
+
+```swift
+import Seeker
+import Tracing
+```
+
+```swift
+let tracer = Seeker.tracer
+// Example tracer usage
+DispatchQueue.global(qos: .background).async {
+            let rootSpan = tracer.startSpan("initial_span", baggage: .topLevel)
+
+            sleep(1)
+            rootSpan.addEvent(SpanEvent(
+                name: "Discovered the meaning of life",
+                attributes: ["meaning_of_life": 42]
+            ))
+
+            let childSpan = tracer.startSpan("child_span", baggage: rootSpan.baggage)
+
+            sleep(1)
+            childSpan.end()
+
+            sleep(1)
+            rootSpan.end()
+        }
+```
+
+#### SwiftUI
+When using SwiftUI the tracer interface can be easily accessed by using the `@TracerInstance` property wrapper.
+
+```swift
+import Seeker
+
+struct SomeView: View {
+
+    @TracerInstance var tracer
+```
+
+For details on how to use the Traces features of `slashmo/opentelemetry-swift` exactly, please check out the [documentation of opentelemetry-swift](https://github.com/slashmo/opentelemetry-swift#starting-spans).
+
 ## Dependencies
 - [swift-log-elk](https://github.com/Apodini/swift-log-elk) for logging
 - [SwiftPrometheus](https://github.com/swift-server-community/SwiftPrometheus) for metrics
 - [opentelemetry-swift](https://github.com/slashmo/opentelemetry-swift) for traces
+
+## Documentation
+
+Take a look at our [API reference]() for a full documentation of the package.
+
+## Contributing
+Contributions to this project are welcome. Please make sure to read the [contribution guidelines]() first.
+
+## License
+This project is licensed under the MIT License. See [License](https://github.com/snkirov/seeker/blob/master/LICENSE) for more information.
