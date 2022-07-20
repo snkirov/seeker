@@ -5,7 +5,6 @@
 //  Created by Svilen Kirov on 18.07.22.
 //
 
-import Foundation
 import Tracing
 
 /// Wraps the currently active tracer instance.

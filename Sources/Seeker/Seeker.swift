@@ -5,7 +5,6 @@
 //  Created by Svilen Kirov on 6.06.22.
 //
 
-import Foundation
 import Logging
 import LoggingELK
 import Metrics
@@ -40,7 +39,7 @@ extension Seeker {
         
         LoggingSystem.bootstrap { label in
             guard shouldLogToConsole else {
-                return MultiplexLogHandler([LogstashLogHandler(label: label)])
+                return LogstashLogHandler(label: label)
             }
             return MultiplexLogHandler(
                 [

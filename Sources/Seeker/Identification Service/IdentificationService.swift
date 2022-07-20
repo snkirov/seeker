@@ -5,9 +5,11 @@
 //  Created by Svilen Kirov on 5.07.22.
 //
 
-import Foundation
+
 #if !os(macOS)
 import UIKit
+#else
+import Foundation
 #endif
 
 /// A protocol which allows a conformer to provide observability services with an identifier.

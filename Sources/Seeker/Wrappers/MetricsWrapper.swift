@@ -5,7 +5,6 @@
 //  Created by Svilen Kirov on 5.07.22.
 //
 
-import Foundation
 import Prometheus
 
 /// Wraps the currently active metrics instance.
