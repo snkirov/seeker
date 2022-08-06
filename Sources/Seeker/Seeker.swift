@@ -18,6 +18,12 @@ public struct Seeker {
     /// Provides identification for the current application. By default the same identification is used for logs, metrics and traces.
     public static var identificationService: IdentificationService = DefaultIdentificationService()
     
+    static var _logger: Logger?
+    
+    static var _metrics: MetricsFactory?
+    
+    static var _tracer: Tracer?
+    
     /// Changes the identification service implementation to the newly provided one.
     /// - Parameter newIdentificationService: The new identification service.
     public static func setIdentificationService(_ newIdentificationService: IdentificationService) {
@@ -29,7 +35,7 @@ public struct Seeker {
     /// Not calling it and using the package will result in a crash.
     /// - Parameter logger: The logger object to be used.
     public static func setupLogger(for logger: Logger) {
-        LoggerWrapper.logger = logger
+        _logger = logger
     }
     
     /// Custom metrics setup method.
@@ -37,7 +43,7 @@ public struct Seeker {
     /// Not calling it and using the package will result in an error.
     /// - Parameter for: The metrics object to be used.
     public static setupMetrics(for metrics: MetricsFactory) {
-        
+        _metrics = metrics
     }
     
     /// Custom tracer setup method.
@@ -45,7 +51,7 @@ public struct Seeker {
     /// Not calling it and using the package will result in a crash.
     /// - Parameter for: The tracer object to be used.
     public static func setupTracer(for tracer: Tracer) {
-        TracerWrapper.tracer = tracer
+        _tracer = tracer
     }
 }
 
@@ -53,12 +59,27 @@ public struct Seeker {
 extension Seeker {
     
     /// Provides the currently used logger instance.
-    public static var logger: Logger { LoggerWrapper.logger! }
+    public static var logger: Logger {
+        guard let logger = _logger else {
+            fatalError("Logger object not initialised")
+        }
+        return logger
+    }
     
     /// Provides the currently used metrics instance.
-    public static var metrics: PrometheusClient { MetricsWrapper.metrics! }
+    public static var metrics: MetricsFactory {
+        guard let metrics = _metrics else {
+            fatalError("Metrics object not initialised")
+        }
+        return metrics
+    }
     
     /// Provides the currently used tracer instance.
-    public static var tracer: Tracer { TracerWrapper.tracer! }
+    public static var tracer: Tracer {
+        guard let tracer = _tracer else {
+            fatalError("Tracer object not initialised")
+        }
+        return tracer
+    }
     
 }

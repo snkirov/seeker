@@ -33,7 +33,7 @@ public struct TraceHandler {
         try? otel.start().wait()
         let tracer = otel.tracer()
         InstrumentationSystem.bootstrap(tracer)
-        TracerWrapper.tracer = tracer
+        _tracer = tracer
     }
     
     /// Shuts down the trace handler.
@@ -41,7 +41,7 @@ public struct TraceHandler {
     public func shutdown() {
         try? otel.shutdown().wait()
         try? group.syncShutdownGracefully()
-        TracerWrapper.tracer = nil
+        _tracer = nil
     }
     
 }

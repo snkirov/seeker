@@ -6,16 +6,14 @@
 //
 
 import SwiftUI
-import Prometheus
+import Metrics
 
 @propertyWrapper
 public struct MetricsInstance: DynamicProperty {
     
     public init() {}
     
-    public var wrappedValue: PrometheusClient {
-        get {
-            MetricsWrapper.metrics!
-        }
+    public var wrappedValue: MetricsFactory {
+        get { Seeker.metrics }
     }
 }

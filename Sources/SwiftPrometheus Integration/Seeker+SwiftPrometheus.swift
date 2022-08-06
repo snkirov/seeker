@@ -12,7 +12,7 @@ import Seeker
 // MARK: - Metrics methods
 extension Seeker {
     
-    public static var prometheusMetrics: PrometheusClient { MetricsWrapper.metrics! }
+    public static var prometheusMetrics: PrometheusClient { PromMetricsWrapper.metrics! }
     
     /// Metrics setup method.
     /// Initialises the Prometheus Client and bootstraps the metrics system with it.
@@ -25,13 +25,13 @@ extension Seeker {
         MetricsSystem.bootstrap(PrometheusMetricsFactory(client: myProm))
         let deviceId = identificationService.getRandomizedDeviceId()
         myProm.pushToGateway(host: hostname, port: port, jobName: deviceId)
-        MetricsWrapper.metrics = myProm
+        PromMetricsWrapper.metrics = myProm
     }
     
     /// Metrics teardown method.
     /// Stops the PushToGateway process and removes the metrics factory instance.
     public static func teardownSwiftPrometheusMetrics() {
-        MetricsWrapper.metrics?.tearDownPushToGateway()
+        prometheusMetrics.tearDownPushToGateway()
         MetricsWrapper.metrics = nil
     }
 }
