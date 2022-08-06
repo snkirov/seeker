@@ -8,7 +8,7 @@
 import Prometheus
 
 /// Wraps the currently active metrics instance.
-struct MetricsWrapper {
+public struct MetricsWrapper {
     /// Defined as an optional, as to avoid instantiating it with a dummy value.
-    static var metrics: PrometheusClient?
+    public static var metrics: PrometheusClient?
 }

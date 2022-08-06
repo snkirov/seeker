@@ -10,14 +10,14 @@ import OpenTelemetry
 import Tracing
 import OtlpGRPCSpanExporting
 
-struct TraceHandler {
+public struct TraceHandler {
     
     private var group: EventLoopGroup
     private var otel: OTel
     
     /// Initialises the trace handler, as described here:
     /// https://github.com/slashmo/opentelemetry-swift#bootstrapping
-    init(serviceName: String, hostname: String, port: UInt) {
+    public init(serviceName: String, hostname: String, port: UInt) {
         group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
         
         let exporter = OtlpGRPCSpanExporter(
@@ -38,7 +38,7 @@ struct TraceHandler {
     
     /// Shuts down the trace handler.
     /// https://github.com/slashmo/opentelemetry-swift#bootstrapping
-    func shutdown() {
+    public func shutdown() {
         try? otel.shutdown().wait()
         try? group.syncShutdownGracefully()
         TracerWrapper.tracer = nil

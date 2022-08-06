@@ -14,6 +14,8 @@ let package = Package(
         .library(
             name: "Seeker",
             targets: ["Seeker"]),
+        .library(name: "Default Configuration",
+                 targets: ["Default Configuration"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -38,6 +40,9 @@ let package = Package(
                 .product(name: "OpenTelemetry", package: "opentelemetry-swift-ios"),
                 .product(name: "OtlpGRPCSpanExporting", package: "opentelemetry-swift-ios"),
             ]),
+        .target(name: "Default Configuration", dependencies: [
+            .target(name: "Seeker")
+        ]),
         .testTarget(
             name: "SeekerTests",
             dependencies: [
