@@ -16,12 +16,11 @@ extension Seeker {
     ///   - port: Port where the otel collector instance is hosted. `4316` by default.
     public static func setupOpenTelemetryTracer(hostname: String = "localhost", port: UInt = 4317) {
         let deviceId = identificationService.getRandomizedDeviceId()
-        tracehandler = TraceHandler(serviceName: deviceId, hostname: hostname, port: port)
+        TraceHandler.setup(serviceName: deviceId, hostname: hostname, port: port)
     }
     
     /// Default tracer teardown method.
     public static func teardownOpenTelemetrytracer() {
-        tracehandler?.shutdown()
-        tracehandler = nil
+        TraceHandler.shutdown()
     }
 }

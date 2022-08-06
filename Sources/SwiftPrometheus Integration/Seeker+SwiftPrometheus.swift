@@ -12,7 +12,12 @@ import Seeker
 // MARK: - Metrics methods
 extension Seeker {
     
-    public static var prometheusMetrics: PrometheusClient { PromMetricsWrapper.metrics! }
+    public static var promMetrics: PrometheusClient {
+        guard let promMetrics = PromMetricsWrapper.metrics else {
+            fatalError("Prometheus metrics object not initialised.")
+        }
+        return promMetrics
+    }
     
     /// Metrics setup method.
     /// Initialises the Prometheus Client and bootstraps the metrics system with it.
@@ -31,7 +36,13 @@ extension Seeker {
     /// Metrics teardown method.
     /// Stops the PushToGateway process and removes the metrics factory instance.
     public static func teardownSwiftPrometheusMetrics() {
-        prometheusMetrics.tearDownPushToGateway()
-        MetricsWrapper.metrics = nil
+        promMetrics.tearDownPushToGateway()
+        PromMetricsWrapper.metrics = nil
     }
+}
+
+/// Wraps the currently active metrics instance.
+struct PromMetricsWrapper {
+    /// Defined as an optional, as to avoid instantiating it with a dummy value.
+    static var metrics: PrometheusClient?
 }

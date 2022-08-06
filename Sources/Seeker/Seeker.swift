@@ -12,9 +12,8 @@ import Prometheus
 import Tracing
 
 public struct Seeker {
-    // TODO: Check if it is really necessary
-    /// Necessary so that we can shutdown the process.
-    public static var tracehandler: TraceHandler?
+    
+    // TODO: Fix public here, either remove setter, or remove public
     /// Provides identification for the current application. By default the same identification is used for logs, metrics and traces.
     public static var identificationService: IdentificationService = DefaultIdentificationService()
     
