@@ -13,9 +13,7 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "Seeker",
-            targets: ["Seeker"]),
-        .library(name: "Default Configuration",
-                 targets: ["Default Configuration"])
+            targets: ["Seeker"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -41,6 +39,17 @@ let package = Package(
                 .product(name: "OtlpGRPCSpanExporting", package: "opentelemetry-swift-ios"),
             ]),
         .target(name: "Default Configuration", dependencies: [
+            .target(name: "LoggingELK Integration"),
+            .target(name: "SwiftPrometheus Integration"),
+            .target(name: "OpenTelemetry Integration")
+        ]),
+        .target(name: "LoggingELK Integration", dependencies: [
+            .target(name: "Seeker")
+        ]),
+        .target(name: "SwiftPrometheus Integration", dependencies: [
+            .target(name: "Seeker")
+        ]),
+        .target(name: "OpenTelemetry Integration", dependencies: [
             .target(name: "Seeker")
         ]),
         .testTarget(

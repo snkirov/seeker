@@ -15,7 +15,10 @@ public struct LoggerInstance: DynamicProperty {
     
     public var wrappedValue: Logger {
         get {
-            LoggerWrapper.logger!
+            guard let logger = LoggerWrapper.logger else {
+                fatalError("Logger object not initialised.")
+            }
+            return logger
         }
     }
 }

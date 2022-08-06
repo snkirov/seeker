@@ -18,7 +18,7 @@ extension Seeker {
     ///   - hostname: Host where the logstash instance is hosted. `localhost` by default.
     ///   - port: Port where the logstash instance is hosted. `5001` by default.
     ///   - shouldLogToConsole: Whether logging to the console should be enabled. Useful for debugging. `True` by default.
-    public static func loggerSetup(hostname: String = "localhost", port: Int = 5001, shouldLogToConsole: Bool = true) {
+    public static func setupLoggingELKLogger(hostname: String = "localhost", port: Int = 5001, shouldLogToConsole: Bool = true) {
         LogstashLogHandler.setup(hostname: hostname, port: port)
         
         LoggingSystem.bootstrap { label in

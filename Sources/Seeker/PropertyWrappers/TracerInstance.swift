@@ -15,7 +15,10 @@ public struct TracerInstance: DynamicProperty {
     
     public var wrappedValue: Tracer {
         get {
-            TracerWrapper.tracer!
+            guard let tracer = TracerWrapper.tracer else {
+                fatalError("Tracer object not initialised")
+            }
+            return tracer
         }
     }
 }
