@@ -6,6 +6,9 @@
 //
 
 import Seeker
+import LoggingELK_Integration
+import SwiftPrometheus_Integration
+import OpenTelemetry_Integration
 
 extension Seeker {
     public static func setupDefaultConfiguration(host: String) {

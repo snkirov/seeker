@@ -35,6 +35,6 @@ extension Seeker {
         
         let deviceId = identificationService.getRandomizedDeviceId()
         let logger = Logger(label: deviceId)
-        customLoggerSetup(for: logger)
+        setupLogger(for: logger)
     }
 }

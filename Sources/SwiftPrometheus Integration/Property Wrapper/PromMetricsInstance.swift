@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Prometheus
+import Seeker
 
 @propertyWrapper
 public struct PromMetricsInstance: DynamicProperty {

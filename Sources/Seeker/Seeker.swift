@@ -35,14 +35,24 @@ public struct Seeker {
     /// - Parameter logger: The logger object to be used.
     public static func setupLogger(for logger: Logger) {
         _logger = logger
+        logger.info("Version: ")
+        logger.info("IsFirstLaunch: ")
+    }
+    
+    public static func teardownLogger() {
+        _logger = nil
     }
     
     /// Custom metrics setup method.
     /// Must be called after the custom metrics handler is initialised and configured..
     /// Not calling it and using the package will result in an error.
     /// - Parameter for: The metrics object to be used.
-    public static setupMetrics(for metrics: MetricsFactory) {
+    public static func setupMetrics(for metrics: MetricsFactory) {
         _metrics = metrics
+    }
+    
+    public static func teardownMetrics() {
+        _metrics = nil
     }
     
     /// Custom tracer setup method.
@@ -51,6 +61,10 @@ public struct Seeker {
     /// - Parameter for: The tracer object to be used.
     public static func setupTracer(for tracer: Tracer) {
         _tracer = tracer
+    }
+    
+    public static func teardownTracer() {
+        _tracer = nil
     }
 }
 
