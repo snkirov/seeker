@@ -20,4 +20,10 @@ extension Seeker {
         setupSwiftPrometheusMetrics(hostname: metricsHost, port: metricsPort)
         setupOpenTelemetryTracer(hostname: tracingHost, port: UInt(tracingPort))
     }
+    
+    public static func teardownDefaultConfiguration() {
+        teardownLogger()
+        teardownSwiftPrometheusMetrics()
+        teardownOpenTelemetrytracer()
+    }
 }

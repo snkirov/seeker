@@ -23,12 +23,12 @@ extension Seeker {
     /// Initialises the Prometheus Client and bootstraps the metrics system with it.
     /// Starts the pushToGateway process and assigns the prom client to the metrics factory.
     /// - Parameters:
-    ///   - hostname: Host where the prometheus push gateway instance is hosted. `localhost` by default.
+    ///   - hostname: Host where the prometheus push gateway instance is hosted.
     ///   - port: Port where the prometheus push gateway instance is hosted. `9091` by default.
-    public static func setupSwiftPrometheusMetrics(hostname: String = "localhost", port: Int? = 9091) {
+    public static func setupSwiftPrometheusMetrics(hostname: String, port: Int? = 9091) {
         let myProm = PrometheusClient()
         MetricsSystem.bootstrap(PrometheusMetricsFactory(client: myProm))
-        let deviceId = identificationService.getRandomizedDeviceId()
+        let deviceId = identificationService.getObservabilityIdentifier()
         myProm.pushToGateway(host: hostname, port: port, jobName: deviceId)
         PromMetricsWrapper.metrics = myProm
     }

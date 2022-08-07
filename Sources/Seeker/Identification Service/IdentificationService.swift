@@ -16,7 +16,7 @@ import Foundation
 public protocol IdentificationService {
     /// The method which provides the identifier.
     /// - Returns: The identifier.
-    func getRandomizedDeviceId() -> String
+    public func getObservabilityIdentifier() -> String
 }
 
 /// Default implementation of the Identification service.
@@ -26,14 +26,14 @@ public struct DefaultIdentificationService: IdentificationService {
     
     private let deviceIdKey: String = "device-id-key"
     
-    public func getRandomizedDeviceId() -> String {
+    public func getObservabilityIdentifier() -> String {
         
         let defaults = UserDefaults.standard
         let existingDeviceId = defaults.string(forKey: deviceIdKey)
         
         guard let existingDeviceId = existingDeviceId else {
             let newDeviceId: String
-            newDeviceId = generateRandomizedDeviceId()
+            newDeviceId = generateRandomizedObservabilityIdentifier()
             print("Generated device Id: \(newDeviceId)")
             defaults.set(newDeviceId, forKey: deviceIdKey)
             
@@ -43,7 +43,7 @@ public struct DefaultIdentificationService: IdentificationService {
         return existingDeviceId
     }
     
-    private func generateRandomizedDeviceId() -> String {
+    private func generateRandomizedObservabilityIdentifier() -> String {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         
         #if !os(macOS)

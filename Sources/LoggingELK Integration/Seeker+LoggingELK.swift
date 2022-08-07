@@ -15,10 +15,10 @@ extension Seeker {
     /// Initialises the default log handler and bootstraps the logging system with it.
     /// Creates the logger and assigns it to the logger factory.
     /// - Parameters:
-    ///   - hostname: Host where the logstash instance is hosted. `localhost` by default.
+    ///   - hostname: Host where the logstash instance is hosted.
     ///   - port: Port where the logstash instance is hosted. `5001` by default.
     ///   - shouldLogToConsole: Whether logging to the console should be enabled. Useful for debugging. `True` by default.
-    public static func setupLoggingELKLogger(hostname: String = "localhost", port: Int = 5001, shouldLogToConsole: Bool = true) {
+    public static func setupLoggingELKLogger(hostname: String, port: Int = 5001, shouldLogToConsole: Bool = true) {
         LogstashLogHandler.setup(hostname: hostname, port: port)
         
         LoggingSystem.bootstrap { label in
@@ -33,7 +33,7 @@ extension Seeker {
             )
         }
         
-        let deviceId = identificationService.getRandomizedDeviceId()
+        let deviceId = identificationService.getObservabilityIdentifier()
         let logger = Logger(label: deviceId)
         setupLogger(for: logger)
     }
