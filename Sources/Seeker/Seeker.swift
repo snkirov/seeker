@@ -6,10 +6,11 @@
 //
 
 import Logging
-import LoggingELK
 import Metrics
-import Prometheus
 import Tracing
+#if !os(macOS)
+import UIKit
+#endif
 
 public struct Seeker {
     
@@ -35,12 +36,34 @@ public struct Seeker {
     /// - Parameter logger: The logger object to be used.
     public static func setupLogger(for logger: Logger) {
         _logger = logger
-        logger.info("Version: ")
-        logger.info("IsFirstLaunch: ")
+        guard isFirstLaunch() else { return }
+        generateInitialLogs()
     }
     
     public static func teardownLogger() {
         _logger = nil
+    }
+    
+    private static func generateInitialLogs() {
+        logger.info("FirstLaunch")
+#if os(iOS)
+        logger.info("Platform: iOS")
+        logger.info("Version: \(UIDevice.current.systemVersion)")
+#elseif os(macOS)
+        logger.info("Platform: macOS")
+        logger.info("Version: \(NSProcessInfo.processInfo().operatingSystemVersion)")
+#endif
+    }
+    
+    private static func isFirstLaunch() -> Bool {
+        let isFirstLaunchKey = "is-first-launch"
+        let defaults = UserDefaults.standard
+        if defaults.bool(forKey: isFirstLaunchKey) {
+            defaults.set(false, forKey: isFirstLaunchKey)
+            return true
+        } else {
+            return false
+        }
     }
     
     /// Custom metrics setup method.
@@ -74,7 +97,7 @@ extension Seeker {
     /// Provides the currently used logger instance.
     public static var logger: Logger {
         guard let logger = _logger else {
-            fatalError("Logger object not initialised")
+            fatalError("Logger object accessed before being configured.")
         }
         return logger
     }
@@ -82,7 +105,7 @@ extension Seeker {
     /// Provides the currently used metrics instance.
     public static var metrics: MetricsFactory {
         guard let metrics = _metrics else {
-            fatalError("Metrics object not initialised")
+            fatalError("Metrics object accessed before being configured.")
         }
         return metrics
     }
@@ -90,7 +113,7 @@ extension Seeker {
     /// Provides the currently used tracer instance.
     public static var tracer: Tracer {
         guard let tracer = _tracer else {
-            fatalError("Tracer object not initialised")
+            fatalError("Tracer object accessed before being configured.")
         }
         return tracer
     }
