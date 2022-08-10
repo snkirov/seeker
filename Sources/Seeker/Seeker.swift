@@ -10,6 +10,8 @@ import Metrics
 import Tracing
 #if !os(macOS)
 import UIKit
+#else
+import Foundation
 #endif
 
 public struct Seeker {
@@ -51,7 +53,7 @@ public struct Seeker {
         logger.info("Version: \(UIDevice.current.systemVersion)")
 #elseif os(macOS)
         logger.info("Platform: macOS")
-        logger.info("Version: \(NSProcessInfo.processInfo().operatingSystemVersion)")
+        logger.info("Version: \(ProcessInfo.processInfo.operatingSystemVersion)")
 #endif
     }
     

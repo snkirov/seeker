@@ -16,7 +16,7 @@ import Foundation
 public protocol IdentificationService {
     /// The method which provides the identifier.
     /// - Returns: The identifier.
-    public func getObservabilityIdentifier() -> String
+    func getObservabilityIdentifier() -> String
 }
 
 /// Default implementation of the Identification service.
