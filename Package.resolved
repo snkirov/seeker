@@ -14,17 +14,26 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/grpc/grpc-swift.git",
       "state" : {
-        "revision" : "d772b688d718c2eb29f99b535fc4d92ebba031c5",
-        "version" : "1.8.1"
+        "revision" : "d114c5ec34015bab663b3b7afaa7d6197656e47e",
+        "version" : "1.9.0"
       }
     },
     {
-      "identity" : "opentelemetry-swift-ios",
+      "identity" : "opentelemetry-swift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/snkirov/opentelemetry-swift-ios.git",
+      "location" : "https://github.com/slashmo/opentelemetry-swift",
       "state" : {
-        "revision" : "c6a1668f1c701d15a753c4f658f715ff5acdd614",
-        "version" : "0.2.1"
+        "branch" : "main",
+        "revision" : "92f9788fea46f8389370a794a2f05c7ddcd8a01f"
+      }
+    },
+    {
+      "identity" : "swift-atomics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-atomics.git",
+      "state" : {
+        "revision" : "919eb1d83e02121cdb434c7bfc1f0c66ef17febe",
+        "version" : "1.0.2"
       }
     },
     {
@@ -57,10 +66,10 @@
     {
       "identity" : "swift-log-elk",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/snkirov/swift-log-elk.git",
+      "location" : "https://github.com/Apodini/swift-log-elk",
       "state" : {
-        "revision" : "33568756dd46d00b7b3da63f11bd16c909df633b",
-        "version" : "0.2.3"
+        "branch" : "develop",
+        "revision" : "33568756dd46d00b7b3da63f11bd16c909df633b"
       }
     },
     {
@@ -95,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-http2.git",
       "state" : {
-        "revision" : "108ac15087ea9b79abb6f6742699cf31de0e8772",
-        "version" : "1.22.0"
+        "revision" : "f9ab1c94c80d568efd762d2a638f25162691d766",
+        "version" : "1.22.1"
       }
     },
     {
@@ -122,8 +131,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-protobuf.git",
       "state" : {
-        "revision" : "e1499bc69b9040b29184f7f2996f7bab467c1639",
-        "version" : "1.19.0"
+        "revision" : "fa0fcd43f272a260e7f734f23e6dc55e16fcae0a",
+        "version" : "1.19.1"
       }
     },
     {

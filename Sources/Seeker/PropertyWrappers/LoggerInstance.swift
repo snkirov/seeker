@@ -14,8 +14,6 @@ public struct LoggerInstance: DynamicProperty {
     public init() {}
     
     public var wrappedValue: Logger {
-        get {
-            LoggerWrapper.logger!
-        }
+        get { Seeker.logger }
     }
 }

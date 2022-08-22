@@ -14,8 +14,6 @@ public struct TracerInstance: DynamicProperty {
     public init() {}
     
     public var wrappedValue: Tracer {
-        get {
-            TracerWrapper.tracer!
-        }
+        get { Seeker.tracer }
     }
 }
