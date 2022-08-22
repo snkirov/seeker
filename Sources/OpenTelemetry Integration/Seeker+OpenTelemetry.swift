@@ -7,8 +7,20 @@
 
 import Seeker
 
+protocol SeekerOpenTelemetryTracer {
+    /// Default tracer setup method.
+    /// Initialises a Tracehandler instance. Further setup is done in the initialiser.
+    /// - Parameters:
+    ///   - hostname: Host where the otel collector instance is hosted.
+    ///   - port: Port where the otel collector instance is hosted. `4316` by default.
+    static func setupOpenTelemetryTracer(hostname: String, port: UInt)
+    
+    /// Default tracer teardown method.
+    static func teardownOpenTelemetrytracer()
+}
+
 // MARK: - Tracer methods
-extension Seeker {
+extension Seeker: SeekerOpenTelemetryTracer {
     /// Default tracer setup method.
     /// Initialises a Tracehandler instance. Further setup is done in the initialiser.
     /// - Parameters:

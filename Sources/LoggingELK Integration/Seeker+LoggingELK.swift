@@ -9,15 +9,19 @@ import Logging
 import LoggingELK
 import Seeker
 
-// MARK: - Logger methods
-extension Seeker {
+protocol SeekerELKLogger {
     /// Default logging setup method.
     /// Initialises the default log handler and bootstraps the logging system with it.
     /// Creates the logger and assigns it to the logger factory.
     /// - Parameters:
     ///   - hostname: Host where the logstash instance is hosted.
-    ///   - port: Port where the logstash instance is hosted. `5001` by default.
-    ///   - shouldLogToConsole: Whether logging to the console should be enabled. Useful for debugging. `True` by default.
+    ///   - port: Port where the logstash instance is hosted.
+    ///   - shouldLogToConsole: Whether logging to the console should be enabled. Useful for debugging.
+    static func setupLoggingELKLogger(hostname: String, port: Int, shouldLogToConsole: Bool)
+}
+
+// MARK: - Logger methods
+extension Seeker: SeekerELKLogger {
     public static func setupLoggingELKLogger(hostname: String, port: Int = 5001, shouldLogToConsole: Bool = true) {
         LogstashLogHandler.setup(hostname: hostname, port: port)
         

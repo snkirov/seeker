@@ -9,8 +9,24 @@ import Metrics
 import Prometheus
 import Seeker
 
-// MARK: - Metrics methods
-extension Seeker {
+protocol SeekerPrometheusMetrics {
+    static var promMetrics: PrometheusClient { get }
+    
+    /// Metrics setup method.
+    /// Initialises the Prometheus Client and bootstraps the metrics system with it.
+    /// Starts the pushToGateway process and assigns the prom client to the metrics factory.
+    /// - Parameters:
+    ///   - hostname: Host where the prometheus push gateway instance is hosted.
+    ///   - port: Port where the prometheus push gateway instance is hosted.
+    static func setupSwiftPrometheusMetrics(hostname: String, port: Int?)
+    
+    /// Metrics teardown method.
+    /// Stops the PushToGateway process and removes the metrics factory instance.
+    static func teardownSwiftPrometheusMetrics()
+}
+
+// MARK: - SeekerPrometheusMetrics methods
+extension Seeker: SeekerPrometheusMetrics {
     
     public static var promMetrics: PrometheusClient {
         guard let promMetrics = PromMetricsWrapper.metrics else {
@@ -19,12 +35,6 @@ extension Seeker {
         return promMetrics
     }
     
-    /// Metrics setup method.
-    /// Initialises the Prometheus Client and bootstraps the metrics system with it.
-    /// Starts the pushToGateway process and assigns the prom client to the metrics factory.
-    /// - Parameters:
-    ///   - hostname: Host where the prometheus push gateway instance is hosted.
-    ///   - port: Port where the prometheus push gateway instance is hosted. `9091` by default.
     public static func setupSwiftPrometheusMetrics(hostname: String, port: Int? = 9091) {
         let myProm = PrometheusClient()
         let metricsFactory = PrometheusMetricsFactory(client: myProm)
@@ -35,8 +45,6 @@ extension Seeker {
         Seeker.setupMetrics(for: metricsFactory)
     }
     
-    /// Metrics teardown method.
-    /// Stops the PushToGateway process and removes the metrics factory instance.
     public static func teardownSwiftPrometheusMetrics() {
         promMetrics.tearDownPushToGateway()
         PromMetricsWrapper.metrics = nil
