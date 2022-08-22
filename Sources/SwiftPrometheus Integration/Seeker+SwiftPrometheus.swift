@@ -27,10 +27,12 @@ extension Seeker {
     ///   - port: Port where the prometheus push gateway instance is hosted. `9091` by default.
     public static func setupSwiftPrometheusMetrics(hostname: String, port: Int? = 9091) {
         let myProm = PrometheusClient()
-        MetricsSystem.bootstrap(PrometheusMetricsFactory(client: myProm))
+        let metricsFactory = PrometheusMetricsFactory(client: myProm)
+        MetricsSystem.bootstrap(metricsFactory)
         let deviceId = identificationService.getObservabilityIdentifier()
         myProm.pushToGateway(host: hostname, port: port, jobName: deviceId)
         PromMetricsWrapper.metrics = myProm
+        Seeker.setupMetrics(for: metricsFactory)
     }
     
     /// Metrics teardown method.
