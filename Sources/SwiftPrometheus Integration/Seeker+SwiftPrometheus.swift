@@ -10,6 +10,7 @@ import Prometheus
 import Seeker
 
 protocol SeekerPrometheusMetrics {
+    /// Provides the currently used prometheus metrics instance.
     static var promMetrics: PrometheusClient { get }
     
     /// Metrics setup method.

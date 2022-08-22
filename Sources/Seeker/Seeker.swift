@@ -76,6 +76,7 @@ public struct Seeker {
         _metrics = metrics
     }
     
+    /// Custom metrics teardown method.
     public static func teardownMetrics() {
         _metrics = nil
     }
@@ -88,6 +89,7 @@ public struct Seeker {
         _tracer = tracer
     }
     
+    /// Custom tracer teardown method.
     public static func teardownTracer() {
         _tracer = nil
     }
