@@ -297,7 +297,7 @@ For details on how to use the Traces features of `slashmo/opentelemetry-swift` e
 
 ## Documentation
 
-Take a look at our [API reference](snkirov.github.io/seeker) for a full documentation of the package.
+Take a look at our [API reference](https://snkirov.github.io/seeker) for a full documentation of the package.
 
 ## Contributing
 Contributions to this project are welcome. Please make sure to read the [contribution guidelines]() first.
