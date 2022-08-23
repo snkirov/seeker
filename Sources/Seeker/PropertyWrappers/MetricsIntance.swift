@@ -10,10 +10,10 @@ import Metrics
 
 @propertyWrapper
 public struct MetricsInstance: DynamicProperty {
-    
-    public init() {}
-    
-    public var wrappedValue: MetricsFactory {
-        get { Seeker.metrics }
-    }
+  
+  public init() {}
+  
+  public var wrappedValue: MetricsFactory {
+    get { Seeker.metrics }
+  }
 }

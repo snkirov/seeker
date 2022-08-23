@@ -11,10 +11,10 @@ import Seeker
 
 @propertyWrapper
 public struct PromMetricsInstance: DynamicProperty {
-    
-    public init() {}
-    
-    public var wrappedValue: PrometheusClient {
-        get { Seeker.promMetrics }
-    }
+  
+  public init() {}
+  
+  public var wrappedValue: PrometheusClient {
+    get { Seeker.promMetrics }
+  }
 }

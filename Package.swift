@@ -67,7 +67,7 @@ let package = Package(
         .testTarget(
             name: "SeekerTests",
             dependencies: [
-                .target(name: "Seeker")
+                .target(name: "Default Configuration")
             ]),
     ]
 )

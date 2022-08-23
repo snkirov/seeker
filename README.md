@@ -2,7 +2,7 @@
 
 ### **Seeker is a privacy-friendly open-source observability library for Swift applications**
 
-The Seeker library allows developers to easily collect observability data in their mobile applications. The data is processed via [Logstash](https://www.elastic.co/logstash/), [Prometheus](https://www.prometheus.io) and [Zipkin](https://www.zipkin), and then visualized in [Grafana]() and [Kibana](https://www.elastic.co/kibana/).
+The Seeker library allows developers to easily collect observability data in their mobile applications. The data is processed via [Logstash](https://www.elastic.co/logstash/), [Prometheus](https://www.prometheus.io) and [Zipkin](https://www.zipkin), and then visualized in [Grafana](https://grafana.com/) and [Kibana](https://www.elastic.co/kibana/).
 
 This library combines [three open-source observability solutions](https://github.com/snkirov/seeker/blob/master/README.md#dependencies) into a single package, thus providing software engineers with a complete picture of how their apps behave in a production environment.
 
@@ -12,15 +12,15 @@ For an example backend services setup see [seeker-docker-example](https://github
 
 ## Features
 - Written completly in Swift
-- iOS-first, but supports all Apple platforms as well (tvOS, macOS, watchOS)
+- iOS-first, but supports macOS as well
 - SwiftUI integration using property wrappers
 - Each application instance gets a randomly generated identifier, which enables developers to synchronize logs, metrics and traces for a given device, while preserving user-privacy. 
-- Seeker only communicates with open-source backends which process information on device, ensuring that user data never goes through third-party infrastructure
+- Seeker only communicates with open-source backends which process information on device, ensuring that user data never goes through third-party infrastructure, thus the framework is completely transparent.
 - By building on top of Apple's packages for [logs](https://github.com/apple/swift-log), [metrics](https://github.com/apple/swift-metrics) and [traces](https://github.com/apple/swift-distributed-tracing), this package can also be used with different observability backends. (As long as there is a swift library, which builds on top of Apple's observability packages, to enable the communication with that backend.)
 
 ## Description
 
-The Seeker library facilitates the collection of three types of observability data - logs, metrics and traces.
+The Seeker library facilitates the collection of the three main types of observability data - logs, metrics and traces.
 
 For an example backend services setup see [seeker-docker-example](https://github.com/snkirov/seeker-docker-example).
 
@@ -48,36 +48,50 @@ Add `seeker` package as a dependency to your `Package.swift` file.
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/snkirov/seeker.git", from: "0.1.0")
+    .package(url: "https://github.com/snkirov/seeker.git", from: "0.2.0")
 ]
 ```
 
-Add `Seeker` (from `seeker`) to your target's dependencies.
+Add the necessary prodcuts (from `Seeker`) to your target's dependencies.
 
 ```swift
 targets: [
     .target(
         name: "ExampleApp",
         dependencies: [
-            .product(name: "Seeker", package: "seeker"),
+            .product(name: "LoggingELK_Integration", package: "seeker"), // For example we want the LoggingELK_Integration product here
         ]
     )
 ]
 ```
 
-### Logging Setup
+### Default Configuration
 
-Import the `Seeker` module:
+The `Default Configuration` is the simplest way to setup the Seeker framework. Under the hood it sets up the LoggingELK logger, SwiftPrometheus metrics object and OpenTelemetry tracer. To do this, you need to add the `Default_Contfiguration` product to your project, then import it:
 
 ```swift
-import Seeker
+import Default_Configuration
+```
+Call the `setupDefaultConfiguration()` function on app launch, where you specify the host where the **Logstash**, **Prometheus PushGateway**, and **OTel Collector** instances are hosted. If using ports different than the default ones or the services are hosted on different hosts, there is also a more explicit version of this method.
+
+```swift
+// Default Configuration Setup
+Seeker.setupDefaultConfiguration(host: "0.0.0.0")
 ```
 
-Call the `loggerSetup()` function on app launch, where you specify the host and port at which the **Logstash** instance is being ran.
+### Logging Setup
+
+Import the `LoggingELK_Integration` module:
+
+```swift
+import LoggingELK_Integration
+```
+
+Call the `setupLoggingELKLogger()` function on app launch, where you specify the host and port at which the **Logstash** instance is being ran.
 
 ```swift
 // Logger Setup
-Seeker.loggerSetup(hostname: "0.0.0.0", port: 5000)
+Seeker.setupLoggingELKLogger(hostname: "0.0.0.0", port: 5000)
 ```
 
 For a SwiftUI application - do it in the application `init()` method or in the `AppDelegate` `application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?)` funtion for UIKit. 
@@ -114,17 +128,17 @@ Seeker.customLoggerSetup(for: logger)
 
 ### Metrics Setup
 
-Import the `Seeker` module:
+Import the `SwiftPrometheus_Integration` module:
 
 ```swift
-import Seeker
+import SwiftPrometheus_Integration
 ```
 
-Call the `metricsSetup()` function on app launch, where you specify the host and port at which the **Prometheus Pushgateway** instance is being ran.
+Call the `setupSwiftPrometheusMetrics()` function on app launch, where you specify the host and port at which the **Prometheus Pushgateway** instance is being ran.
 
 ```swift
 // Metrics Setup
-Seeker.metricsSetup(hostname: "0.0.0.0", port: 9091)
+Seeker.setupSwiftPrometheusMetrics(hostname: "0.0.0.0", port: 9091)
 ```
 
 For a SwiftUI application - do it in the application `init()` method or in the `AppDelegate` `application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?)` funtion for UIKit. 
@@ -139,11 +153,11 @@ Import the `Seeker` module:
 import Seeker
 ```
 
-Call the `tracerSetup()` function on app launch, where you specify the host and port at which the **Opentelemetry collector** instance is being ran.
+Call the `setupOpenTelemetryTracer()` function on app launch, where you specify the host and port at which the **Opentelemetry collector** instance is being ran.
 
 ```swift
 // Tracer Setup
-Seeker.tracerSetup()
+Seeker.setupOpenTelemetryTracer()
 ```
 
 **Important:** Using the tracer interface without invoking a tracer setup function will result in a crash.
@@ -205,28 +219,28 @@ For details on how to use the Logging features of `apple/swift-log` exactly, ple
 ### Metrics
 
 #### General Usage
-Once setup, the metrics interface can be easily accessed by importing the Seeker package and then accessing the `metrics` property.
+Once setup, the prometheus metrics interface can be easily accessed by importing the `SwiftPrometheus_Integration` product and then accessing the `promMetrics` property.
 
 ```swift
-import Seeker
+import SwiftPrometheus_Integration
 ```
 
 ```swift
-let metrics = Seeker.metrics
+let metrics = Seeker.promMetrics
 // Example metrics usage
 let counter = metrics.createCounter(forType: Int.self, named: "example_counter")
 counter.inc()
 ```
 
 #### SwiftUI
-When using SwiftUI the metrics interface can be easily accessed by using the `@MetricsInstance` property wrapper.
+When using SwiftUI the prom metrics interface can be easily accessed by using the `@PromMetricsInstance` property wrapper.
 
 ```swift
 import Seeker
 
 struct SomeView: View {
 
-    @MetricsInstance var metrics
+    @PromMetricsInstance var metrics
 ```
 
 For details on how to use the Metrics features of `swift-server-community/SwiftPrometheus` exactly, please check out the [documentation of SwiftPrometheus](https://github.com/swift-server-community/SwiftPrometheus#counter).
@@ -283,7 +297,7 @@ For details on how to use the Traces features of `slashmo/opentelemetry-swift` e
 
 ## Documentation
 
-Take a look at our [API reference]() for a full documentation of the package.
+Take a look at our [API reference](snkirov.github.io/seeker) for a full documentation of the package.
 
 ## Contributing
 Contributions to this project are welcome. Please make sure to read the [contribution guidelines]() first.
