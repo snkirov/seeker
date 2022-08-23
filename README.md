@@ -2,7 +2,7 @@
 
 ### **Seeker is a privacy-friendly open-source observability library for Swift applications**
 
-The Seeker library allows developers to easily collect observability data in their mobile applications. The data is processed via [Logstash](https://www.elastic.co/logstash/), [Prometheus](https://www.prometheus.io) and [Zipkin](https://www.zipkin), and then visualized in [Grafana]() and [Kibana](https://www.elastic.co/kibana/).
+The Seeker library allows developers to easily collect observability data in their mobile applications. The data is processed via [Logstash](https://www.elastic.co/logstash/), [Prometheus](https://www.prometheus.io) and [Zipkin](https://www.zipkin), and then visualized in [Grafana](https://grafana.com/) and [Kibana](https://www.elastic.co/kibana/).
 
 This library combines [three open-source observability solutions](https://github.com/snkirov/seeker/blob/master/README.md#dependencies) into a single package, thus providing software engineers with a complete picture of how their apps behave in a production environment.
 
@@ -12,15 +12,15 @@ For an example backend services setup see [seeker-docker-example](https://github
 
 ## Features
 - Written completly in Swift
-- iOS-first, but supports all Apple platforms as well (tvOS, macOS, watchOS)
+- iOS-first, but supports macOS as well
 - SwiftUI integration using property wrappers
 - Each application instance gets a randomly generated identifier, which enables developers to synchronize logs, metrics and traces for a given device, while preserving user-privacy. 
-- Seeker only communicates with open-source backends which process information on device, ensuring that user data never goes through third-party infrastructure
+- Seeker only communicates with open-source backends which process information on device, ensuring that user data never goes through third-party infrastructure, thus the framework is completely transparent.
 - By building on top of Apple's packages for [logs](https://github.com/apple/swift-log), [metrics](https://github.com/apple/swift-metrics) and [traces](https://github.com/apple/swift-distributed-tracing), this package can also be used with different observability backends. (As long as there is a swift library, which builds on top of Apple's observability packages, to enable the communication with that backend.)
 
 ## Description
 
-The Seeker library facilitates the collection of three types of observability data - logs, metrics and traces.
+The Seeker library facilitates the collection of the three main types of observability data - logs, metrics and traces.
 
 For an example backend services setup see [seeker-docker-example](https://github.com/snkirov/seeker-docker-example).
 
@@ -283,7 +283,7 @@ For details on how to use the Traces features of `slashmo/opentelemetry-swift` e
 
 ## Documentation
 
-Take a look at our [API reference]() for a full documentation of the package.
+Take a look at our [API reference](snkirov.github.io/seeker) for a full documentation of the package.
 
 ## Contributing
 Contributions to this project are welcome. Please make sure to read the [contribution guidelines]() first.
