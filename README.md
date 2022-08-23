@@ -48,36 +48,50 @@ Add `seeker` package as a dependency to your `Package.swift` file.
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/snkirov/seeker.git", from: "0.1.0")
+    .package(url: "https://github.com/snkirov/seeker.git", from: "0.2.0")
 ]
 ```
 
-Add `Seeker` (from `seeker`) to your target's dependencies.
+Add the necessary prodcuts (from `Seeker`) to your target's dependencies.
 
 ```swift
 targets: [
     .target(
         name: "ExampleApp",
         dependencies: [
-            .product(name: "Seeker", package: "seeker"),
+            .product(name: "LoggingELK_Integration", package: "seeker"), // For example we want the LoggingELK_Integration product here
         ]
     )
 ]
 ```
 
-### Logging Setup
+### Default Configuration
 
-Import the `Seeker` module:
+The `Default Configuration` is the simplest way to setup the Seeker framework. Under the hood it sets up the LoggingELK logger, SwiftPrometheus metrics object and OpenTelemetry tracer. To do this, you need to add the `Default_Contfiguration` product to your project, then import it:
 
 ```swift
-import Seeker
+import Default_Configuration
+```
+Call the `setupDefaultConfiguration()` function on app launch, where you specify the host where the **Logstash**, **Prometheus PushGateway**, and **OTel Collector** instances are hosted. If using ports different than the default ones or the services are hosted on different hosts, there is also a more explicit version of this method.
+
+```swift
+// Default Configuration Setup
+Seeker.setupDefaultConfiguration(host: "0.0.0.0")
 ```
 
-Call the `loggerSetup()` function on app launch, where you specify the host and port at which the **Logstash** instance is being ran.
+### Logging Setup
+
+Import the `LoggingELK_Integration` module:
+
+```swift
+import LoggingELK_Integration
+```
+
+Call the `setupLoggingELKLogger()` function on app launch, where you specify the host and port at which the **Logstash** instance is being ran.
 
 ```swift
 // Logger Setup
-Seeker.loggerSetup(hostname: "0.0.0.0", port: 5000)
+Seeker.setupLoggingELKLogger(hostname: "0.0.0.0", port: 5000)
 ```
 
 For a SwiftUI application - do it in the application `init()` method or in the `AppDelegate` `application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?)` funtion for UIKit. 
@@ -114,17 +128,17 @@ Seeker.customLoggerSetup(for: logger)
 
 ### Metrics Setup
 
-Import the `Seeker` module:
+Import the `SwiftPrometheus_Integration` module:
 
 ```swift
-import Seeker
+import SwiftPrometheus_Integration
 ```
 
-Call the `metricsSetup()` function on app launch, where you specify the host and port at which the **Prometheus Pushgateway** instance is being ran.
+Call the `setupSwiftPrometheusMetrics()` function on app launch, where you specify the host and port at which the **Prometheus Pushgateway** instance is being ran.
 
 ```swift
 // Metrics Setup
-Seeker.metricsSetup(hostname: "0.0.0.0", port: 9091)
+Seeker.setupSwiftPrometheusMetrics(hostname: "0.0.0.0", port: 9091)
 ```
 
 For a SwiftUI application - do it in the application `init()` method or in the `AppDelegate` `application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?)` funtion for UIKit. 
@@ -139,11 +153,11 @@ Import the `Seeker` module:
 import Seeker
 ```
 
-Call the `tracerSetup()` function on app launch, where you specify the host and port at which the **Opentelemetry collector** instance is being ran.
+Call the `setupOpenTelemetryTracer()` function on app launch, where you specify the host and port at which the **Opentelemetry collector** instance is being ran.
 
 ```swift
 // Tracer Setup
-Seeker.tracerSetup()
+Seeker.setupOpenTelemetryTracer()
 ```
 
 **Important:** Using the tracer interface without invoking a tracer setup function will result in a crash.
@@ -205,28 +219,28 @@ For details on how to use the Logging features of `apple/swift-log` exactly, ple
 ### Metrics
 
 #### General Usage
-Once setup, the metrics interface can be easily accessed by importing the Seeker package and then accessing the `metrics` property.
+Once setup, the prometheus metrics interface can be easily accessed by importing the `SwiftPrometheus_Integration` product and then accessing the `promMetrics` property.
 
 ```swift
-import Seeker
+import SwiftPrometheus_Integration
 ```
 
 ```swift
-let metrics = Seeker.metrics
+let metrics = Seeker.promMetrics
 // Example metrics usage
 let counter = metrics.createCounter(forType: Int.self, named: "example_counter")
 counter.inc()
 ```
 
 #### SwiftUI
-When using SwiftUI the metrics interface can be easily accessed by using the `@MetricsInstance` property wrapper.
+When using SwiftUI the prom metrics interface can be easily accessed by using the `@PromMetricsInstance` property wrapper.
 
 ```swift
 import Seeker
 
 struct SomeView: View {
 
-    @MetricsInstance var metrics
+    @PromMetricsInstance var metrics
 ```
 
 For details on how to use the Metrics features of `swift-server-community/SwiftPrometheus` exactly, please check out the [documentation of SwiftPrometheus](https://github.com/swift-server-community/SwiftPrometheus#counter).
