@@ -10,10 +10,10 @@ import Logging
 
 @propertyWrapper
 public struct LoggerInstance: DynamicProperty {
-    
-    public init() {}
-    
-    public var wrappedValue: Logger {
-        get { Seeker.logger }
-    }
+  
+  public init() {}
+  
+  public var wrappedValue: Logger {
+    get { Seeker.logger }
+  }
 }

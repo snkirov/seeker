@@ -10,10 +10,10 @@ import Tracing
 
 @propertyWrapper
 public struct TracerInstance: DynamicProperty {
-    
-    public init() {}
-    
-    public var wrappedValue: Tracer {
-        get { Seeker.tracer }
-    }
+  
+  public init() {}
+  
+  public var wrappedValue: Tracer {
+    get { Seeker.tracer }
+  }
 }
